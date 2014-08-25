@@ -9,14 +9,14 @@ if [[ $PACKER_BUILDER_TYPE =~ vmware ]]; then
 [vmware-tools]
 name=VMware Tools
 baseurl=http://packages.vmware.com/tools/esx/5.1latest/rhel6/\$basearch
-enabled=1
+enabled=0
 gpgcheck=1
 EOP
 ) > /tmp/vmware-tools
     chmod 644 /tmp/vmware-tools
     mv -v /tmp/vmware-tools /etc/yum.repos.d/vmware-tools.repo
 
-    yum -y install vmware-tools-hgfs vmware-tools-esx-nox
+    yum -y --enablerepo=vmware-tools install vmware-tools-hgfs vmware-tools-esx-nox
 
 ( cat <<'EOP'
 modprobe vmhgfs
