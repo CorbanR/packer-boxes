@@ -2,7 +2,6 @@
 
 # Update and upgrade
 yum -y update
-#yum -y upgrade
 yum -y install libselinux-python ntp ntpdate
 
 #Updating ntp settings
