@@ -11,7 +11,7 @@ fi
 # Set up sudo.  Be careful to set permission BEFORE copying file to sudoers.d
 echo "Adding vagrant user to sudoers file"
 ( cat <<'EOP'
-vagrant ALL=NOPASSWD:ALL
+%vagrant ALL=(ALL:ALL) NOPASSWD:ALL
 EOP
 ) > /tmp/vagrant
 chmod 0440 /tmp/vagrant
