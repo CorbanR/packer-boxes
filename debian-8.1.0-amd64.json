@@ -1,0 +1,62 @@
+{
+	"variables": {
+		"provisioner": "provisionerless",
+		"provisioner_version": "",
+		"iso_url": "http://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-8.1.0-amd64-DVD-1.iso",
+		"iso_checksum": "10ab3db041d9fae5caa1fe1aa8a4481ca2eef4bdbe097a0687b9af7f8ee98d70"
+	},
+	"builders": [{
+		"vm_name": "debian-8.1.0-amd64",
+		"type": "vmware-iso",
+		"guest_os_type": "debian8-64",
+		"http_directory": "http",
+		"iso_url": "{{user `iso_url`}}",
+		"iso_checksum": "{{user `iso_checksum`}}",
+		"iso_checksum_type": "sha256",
+		"ssh_username": "vagrant",
+		"ssh_password": "vagrant",
+		"ssh_wait_timeout": "10000s",
+		"tools_upload_flavor": "linux",
+		"headless": true,
+		"boot_command": [
+			"<esc><wait>",
+			"install",
+			" auto",
+			" url=http://{{.HTTPIP}}:{{.HTTPPort}}/preseed.cfg",
+			" debian-installer=en_US",
+			" locale=en_US",
+			" keymap=us",
+			" netcfg/get_hostname=vagrant",
+			" netcfg/get_domain=vm ",
+			"<enter>"
+		],
+		"shutdown_command": "echo 'vagrant' | sudo -S shutdown -h now",
+		"disk_size": 10140,
+		"vmx_data": {
+			"memsize": "512",
+			"numvcpus": "1",
+			"cpuid.coresPerSocket": "1"
+		}
+	}],
+	"provisioners": [{
+		"type": "shell",
+		"environment_vars": [
+			"PROVISIONER={{user `provisioner`}}",
+			"PROVISIONER_VERSION={{user `provisioner_version`}}"
+		],
+		"execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+		"scripts": [
+			"script/base.sh",
+			"script/vagrant.sh",
+			"script/vmtools.sh",
+			"script/provisioner.sh",
+			"script/cleanup.sh",
+			"script/zerodisk.sh"
+		]
+	}],
+	"post-processors": [{
+		"type": "vagrant",
+		"keep_input_artifact": false,
+		"output": "{{.Provider}}/debian-8.1.0-amd64.box"
+	}]
+}
