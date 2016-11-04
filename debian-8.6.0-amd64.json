@@ -2,13 +2,13 @@
 	"variables": {
 		"provisioner": "provisionerless",
 		"provisioner_version": "",
-		"iso_url": "http://cdimage.debian.org/cdimage/archive/7.2.0/amd64/iso-dvd/debian-7.2.0-amd64-DVD-1.iso",
-		"iso_checksum": "a24dd53ceb94a67206a5353e885eb38d479a8a1e"
+    "iso_url": "https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-8.6.0-amd64-DVD-1.iso",
+    "iso_checksum": "20c418132fb6b2a87af7a768151786087fb1a20a"
 	},
 	"builders": [{
-		"vm_name": "debian-7.2.0-amd64",
+		"vm_name": "debian-8.6.0-amd64",
 		"type": "vmware-iso",
-		"guest_os_type": "debian7-64",
+		"guest_os_type": "debian8-64",
 		"http_directory": "http",
 		"iso_url": "{{user `iso_url`}}",
 		"iso_checksum": "{{user `iso_checksum`}}",
@@ -17,11 +17,12 @@
 		"ssh_password": "vagrant",
 		"ssh_wait_timeout": "10000s",
 		"tools_upload_flavor": "linux",
+		"headless": true,
 		"boot_command": [
 			"<esc><wait>",
 			"install",
 			" auto",
-			" url=http://{{.HTTPIP}}:{{.HTTPPort}}/preseed.cfg",
+			" url=http://{{.HTTPIP}}:{{.HTTPPort}}/debian-8-preseed.cfg",
 			" debian-installer=en_US",
 			" locale=en_US",
 			" keymap=us",
@@ -29,7 +30,7 @@
 			" netcfg/get_domain=vm ",
 			"<enter>"
 		],
-		"shutdown_command": "echo 'vagrant' | sudo -S shutdown -h now",
+    "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
 		"disk_size": 10140,
 		"vmx_data": {
 			"memsize": "512",
@@ -56,6 +57,6 @@
 	"post-processors": [{
 		"type": "vagrant",
 		"keep_input_artifact": false,
-		"output": "{{.Provider}}/debian-7.2.0-amd64.box"
+		"output": "{{.Provider}}/debian-8.6.0-amd64.box"
 	}]
 }
